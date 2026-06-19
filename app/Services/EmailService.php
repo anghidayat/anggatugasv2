@@ -2,13 +2,11 @@
 
 namespace App\Services;
 
-use App\Mail\VendorStatusChanged;
-use App\Mail\WelcomeEmail;
 use App\Models\EmailLog;
 use App\Models\User;
 use App\Models\Vendor;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class EmailService
 {
@@ -17,15 +15,23 @@ class EmailService
      */
     public function sendWelcome(User $user): bool
     {
-        try {
-            Mail::to($user->email)->send(new WelcomeEmail($user));
+        $subject = 'Selamat Datang di StreetFoodies! 🍜';
 
-            $this->log($user, 'welcome', 'Selamat Datang di StreetFoodies!', 'sent');
+        try {
+            $html = view('emails.welcome', ['user' => $user])->render();
+
+            $this->send([
+                'to'      => $user->email,
+                'subject' => $subject,
+                'html'    => $html,
+            ]);
+
+            $this->log($user, 'welcome', $subject, 'sent');
 
             return true;
         } catch (\Exception $e) {
             Log::error("Welcome email failed for user {$user->id}: " . $e->getMessage());
-            $this->log($user, 'welcome', 'Selamat Datang di StreetFoodies!', 'failed', $e->getMessage());
+            $this->log($user, 'welcome', $subject, 'failed', $e->getMessage());
 
             return false;
         }
@@ -41,26 +47,60 @@ class EmailService
             return false;
         }
 
-        try {
-            Mail::to($user->email)->send(new VendorStatusChanged($vendor, $status, $reason));
+        $subject = $status === 'approved'
+            ? "🎉 Lapak \"{$vendor->name}\" Telah Disetujui!"
+            : "📋 Status Lapak \"{$vendor->name}\" — Ditolak";
 
-            $subject = $status === 'approved'
-                ? "Lapak \"{$vendor->name}\" Telah Disetujui!"
-                : "Lapak \"{$vendor->name}\" Ditolak";
+        try {
+            $html = view('emails.vendor-status-changed', [
+                'vendor'     => $vendor,
+                'newStatus'  => $status,
+                'reason'     => $reason,
+                'vendorName' => $user->name,
+            ])->render();
+
+            $this->send([
+                'to'      => $user->email,
+                'subject' => $subject,
+                'html'    => $html,
+            ]);
 
             $this->log($user, "vendor_{$status}", $subject, 'sent');
 
             return true;
         } catch (\Exception $e) {
             Log::error("Vendor status email failed for vendor {$vendor->id}: " . $e->getMessage());
-
-            $subject = $status === 'approved'
-                ? "Lapak \"{$vendor->name}\" Telah Disetujui!"
-                : "Lapak \"{$vendor->name}\" Ditolak";
-
             $this->log($user, "vendor_{$status}", $subject, 'failed', $e->getMessage());
 
             return false;
+        }
+    }
+
+    /**
+     * Send email via Resend API.
+     */
+    private function send(array $payload): void
+    {
+        $apiKey = env('RESEND_API_KEY');
+
+        if (!$apiKey) {
+            throw new \RuntimeException('RESEND_API_KEY not configured in .env');
+        }
+
+        $from = env('RESEND_FROM_ADDRESS', 'StreetFoodies <onboarding@resend.dev>');
+
+        $response = Http::timeout(15)
+            ->withToken($apiKey)
+            ->post('https://api.resend.com/emails', [
+                'from'    => $from,
+                'to'      => [$payload['to']],
+                'subject' => $payload['subject'],
+                'html'    => $payload['html'],
+            ]);
+
+        if (!$response->successful()) {
+            $error = $response->json('message') ?? $response->body();
+            throw new \RuntimeException("Resend API error: {$error}");
         }
     }
 

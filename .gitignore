@@ -35,3 +35,4 @@ Thumbs.db
 # ── Hermes ──────────────────────────────────
 .hermes/plans/
 _backup/
+.github_token
