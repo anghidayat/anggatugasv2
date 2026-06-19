@@ -64,7 +64,7 @@
 
                         {{-- Toggle Open Button --}}
                         <div class="absolute top-3 right-3">
-                            <form action="{{ route('vendor.vendors.toggleOpen', $vendor->id) }}" method="POST">
+                            <form action="{{ route('vendor.vendors.toggle-open', $vendor->id) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
                                 <button type="submit"

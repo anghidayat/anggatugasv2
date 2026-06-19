@@ -12,8 +12,9 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         return view('buyer.dashboard', [
-            'myReviews' => $user->reviews()->count(),
-            'recentReviews' => $user->reviews()
+            'myReviews'       => $user->reviews()->count(),
+            'vendorsExplored' => $user->reviews()->distinct('vendor_id')->count('vendor_id'),
+            'recentReviews'   => $user->reviews()
                 ->with('vendor')
                 ->latest()
                 ->take(5)
