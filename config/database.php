@@ -3,6 +3,18 @@
 use Illuminate\Support\Str;
 use Pdo\Mysql;
 
+// ── Railway / cloud: parse DATABASE_URL if provided ──────
+if ($dbUrl = env('DATABASE_URL')) {
+    $parsed = parse_url($dbUrl);
+    if ($parsed && !empty($parsed['host'])) {
+        putenv('DB_HOST=' . ($parsed['host'] ?? '127.0.0.1'));
+        putenv('DB_PORT=' . ($parsed['port'] ?? '3306'));
+        putenv('DB_DATABASE=' . ltrim($parsed['path'] ?? 'laravel', '/'));
+        putenv('DB_USERNAME=' . ($parsed['user'] ?? 'root'));
+        putenv('DB_PASSWORD=' . ($parsed['pass'] ?? ''));
+    }
+}
+
 return [
 
     /*
