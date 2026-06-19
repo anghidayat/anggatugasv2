@@ -12,34 +12,40 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Admin
-        User::create([
-            'name' => 'Admin StreetFoodies',
-            'email' => 'admin@streetfoodies.com',
-            'password' => Hash::make('admin123'),
-            'role' => 'admin',
-            'is_active' => true,
-            'email_verified' => true,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@streetfoodies.com'],
+            [
+                'name'           => 'Admin StreetFoodies',
+                'password'       => Hash::make('admin123'),
+                'role'           => 'admin',
+                'is_active'      => true,
+                'email_verified' => true,
+            ]
+        );
 
         // Demo Vendor
-        User::create([
-            'name' => 'Pak Budi Pedagang',
-            'email' => 'vendor@streetfoodies.com',
-            'password' => Hash::make('vendor123'),
-            'role' => 'vendor',
-            'is_active' => true,
-            'email_verified' => true,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'vendor@streetfoodies.com'],
+            [
+                'name'           => 'Pak Budi Pedagang',
+                'password'       => Hash::make('vendor123'),
+                'role'           => 'vendor',
+                'is_active'      => true,
+                'email_verified' => true,
+            ]
+        );
 
         // Demo Buyer
-        User::create([
-            'name' => 'Siti Pembeli',
-            'email' => 'buyer@streetfoodies.com',
-            'password' => Hash::make('buyer123'),
-            'role' => 'buyer',
-            'is_active' => true,
-            'email_verified' => true,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'buyer@streetfoodies.com'],
+            [
+                'name'           => 'Siti Pembeli',
+                'password'       => Hash::make('buyer123'),
+                'role'           => 'buyer',
+                'is_active'      => true,
+                'email_verified' => true,
+            ]
+        );
 
         // Default Categories
         $categories = [
@@ -54,7 +60,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($categories as $cat) {
-            Category::create($cat);
+            Category::firstOrCreate(['name' => $cat['name']], $cat);
         }
     }
 }
