@@ -4,8 +4,8 @@
     "buildCommand": "composer install --no-dev --optimize-autoloader"
   },
   "deploy": {
-    "startCommand": "php artisan migrate --force && php artisan db:seed --force && php -S 0.0.0.0:${PORT:-8080} -t public",
-    "healthcheckPath": "/",
+    "startCommand": "php -S 0.0.0.0:${PORT:-8080} -t public & sleep 3 && php artisan migrate --force && php artisan db:seed --force; wait",
+    "healthcheckPath": "/up",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 3
   }
