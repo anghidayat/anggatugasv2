@@ -35,18 +35,17 @@ class DashboardController extends Controller
             ]);
 
         // Reviews per month (last 6 months, for chart)
-        $reviewsPerMonth = Review::select(
-                DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"),
-                DB::raw('COUNT(*) as count')
-            )
+        // Use PHP grouping — cross-database compatible (MySQL + SQLite)
+        $reviewsPerMonth = Review::select('created_at')
             ->where('created_at', '>=', now()->subMonths(6))
-            ->groupBy('month')
-            ->orderBy('month')
+            ->orderBy('created_at')
             ->get()
-            ->map(fn ($r) => [
-                'month' => date('M Y', strtotime($r->month . '-01')),
-                'count' => $r->count,
-            ]);
+            ->groupBy(fn ($r) => $r->created_at->format('Y-m'))
+            ->map(fn ($group) => [
+                'month' => $group->first()->created_at->format('M Y'),
+                'count' => $group->count(),
+            ])
+            ->values();
 
         // Recent data
         $recentVendors = Vendor::with(['user', 'category'])
