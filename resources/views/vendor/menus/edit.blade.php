@@ -87,7 +87,7 @@
                     <div>
                         <p class="text-gray-500 text-xs mb-2 text-center">Original</p>
                         @if($menu->image_original)
-                        <img src="{{ asset('storage/menus/' . $menu->image_original) }}" class="w-full aspect-square object-cover rounded-xl border border-gray-700">
+                        <img src="{{ asset('storage/' . $menu->image_original) }}" class="w-full aspect-square object-cover rounded-xl border border-gray-700">
                         @else
                         <div class="w-full aspect-square bg-[#0f0f23] rounded-xl flex items-center justify-center border border-gray-700"><span class="text-3xl">🍽️</span></div>
                         @endif
@@ -95,9 +95,9 @@
                     <div>
                         <p class="text-gray-500 text-xs mb-2 text-center">Filtered ({{ ucfirst($menu->filter_type ?? 'none') }})</p>
                         @if($menu->image_filtered && $menu->filter_type !== 'none')
-                        <img src="{{ asset('storage/menus/filtered/' . $menu->image_filtered) }}" class="w-full aspect-square object-cover rounded-xl border border-purple-700">
+                        <img src="{{ asset('storage/' . $menu->image_filtered) }}" class="w-full aspect-square object-cover rounded-xl border border-purple-700">
                         @elseif($menu->image_original)
-                        <img src="{{ asset('storage/menus/' . $menu->image_original) }}" class="w-full aspect-square object-cover rounded-xl border border-gray-700 opacity-60">
+                        <img src="{{ asset('storage/' . $menu->image_original) }}" class="w-full aspect-square object-cover rounded-xl border border-gray-700 opacity-60">
                         @else
                         <div class="w-full aspect-square bg-[#0f0f23] rounded-xl flex items-center justify-center border border-gray-700"><span class="text-3xl">🎨</span></div>
                         @endif
@@ -211,7 +211,7 @@
 @push('scripts')
 <script>
 function editMenuForm() {
-    const originalImg = @json($menu->image_original ? asset('storage/menus/' . $menu->image_original) : null);
+    const originalImg = @json($menu->image_original ? asset('storage/' . $menu->image_original) : null);
     return {
         imageTab: 'upload',
         cameraActive: false,

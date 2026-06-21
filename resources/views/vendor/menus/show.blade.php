@@ -40,14 +40,14 @@
             </div>
             <div class="relative aspect-square">
                 @if($menu->image_original)
-                <img x-show="!showFiltered" src="{{ asset('storage/menus/' . $menu->image_original) }}"
+                <img x-show="!showFiltered" src="{{ asset('storage/' . $menu->image_original) }}"
                      alt="Original" class="w-full h-full object-cover">
                 @endif
                 @if($menu->image_filtered && $menu->filter_type !== 'none')
-                <img x-show="showFiltered" src="{{ asset('storage/menus/filtered/' . $menu->image_filtered) }}"
+                <img x-show="showFiltered" src="{{ asset('storage/' . $menu->image_filtered) }}"
                      alt="Filtered" class="w-full h-full object-cover">
                 @elseif($menu->image_original)
-                <img x-show="showFiltered" src="{{ asset('storage/menus/' . $menu->image_original) }}"
+                <img x-show="showFiltered" src="{{ asset('storage/' . $menu->image_original) }}"
                      alt="Original" class="w-full h-full object-cover">
                 @else
                 <div class="w-full h-full bg-[#0f0f23] flex items-center justify-center">
@@ -110,12 +110,12 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <p class="text-gray-500 text-xs mb-2 text-center">Before</p>
-                        <img src="{{ asset('storage/menus/' . $menu->image_original) }}"
+                        <img src="{{ asset('storage/' . $menu->image_original) }}"
                              class="w-full aspect-square object-cover rounded-xl border border-gray-700">
                     </div>
                     <div>
                         <p class="text-gray-500 text-xs mb-2 text-center">After</p>
-                        <img src="{{ asset('storage/menus/filtered/' . $menu->image_filtered) }}"
+                        <img src="{{ asset('storage/' . $menu->image_filtered) }}"
                              class="w-full aspect-square object-cover rounded-xl border border-purple-700">
                     </div>
                 </div>

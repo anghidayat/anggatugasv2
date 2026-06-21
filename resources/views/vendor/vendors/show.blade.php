@@ -238,8 +238,8 @@
                     <div class="space-y-3">
                         @foreach($vendor->menus->take(5) as $menu)
                             <div class="flex items-center gap-3 bg-[#0f0f23] rounded-lg p-3 border border-gray-700/30">
-                                @if($menu->image)
-                                    <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
+                                @if($menu->image_original)
+                                    <img src="{{ asset('storage/' . $menu->image_original) }}" alt="{{ $menu->name }}" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
                                 @else
                                     <div class="w-12 h-12 rounded-lg bg-gray-700/30 flex items-center justify-center flex-shrink-0">
                                         <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

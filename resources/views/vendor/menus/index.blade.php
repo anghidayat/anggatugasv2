@@ -48,10 +48,10 @@
             {{-- Image --}}
             <div class="relative h-48 overflow-hidden">
                 @if($menu->image_filtered && $menu->filter_type !== 'none')
-                    <img src="{{ asset('storage/menus/filtered/' . $menu->image_filtered) }}"
+                    <img src="{{ asset('storage/' . $menu->image_filtered) }}"
                          alt="{{ $menu->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                 @elseif($menu->image_original)
-                    <img src="{{ asset('storage/menus/' . $menu->image_original) }}"
+                    <img src="{{ asset('storage/' . $menu->image_original) }}"
                          alt="{{ $menu->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                 @else
                     <div class="w-full h-full bg-[#0f0f23] flex items-center justify-center">
